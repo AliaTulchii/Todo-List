@@ -3,6 +3,7 @@ import TodoList from "./TodoList";
 import css from './Todo.module.css';
 import TodoEditor from "components/TodoEditor/TodoEditor";
 import shortid from 'shortid';
+import Modal from '../Modal/Modal'
 
 
 
@@ -18,8 +19,32 @@ class Todo extends Component {
         ],
       activeOptionInd: 0,
       filter: '',
+      showModal: false,
 
   };
+
+
+  componentDidMount() {
+    const todos = localStorage.getItem('todos');
+    const parsedTodos = JSON.parse(todos);
+    if (parsedTodos) {
+      this.setState({ todos: parsedTodos });
+    } 
+    // const parsedTodos = JSON.parse(todos);
+
+    // this.setState({todos: parsedTodos})
+  }
+
+  componentDidUpdate(prevProps,prevState) {
+    console.log('App did update');
+
+    if (this.state.todos !== prevState.todos) {
+      console.log('Todos field is update ');
+      localStorage.setItem('todos', JSON.stringify(this.state.todos));
+    }
+  }
+
+  
   
   addTodo = text => {
     console.log(text);
@@ -74,36 +99,29 @@ class Todo extends Component {
      return  this.state.todos.filter(todo => todo.text.toLowerCase().includes(normalizedFilter));
   }
 
+  toggleModal = () => {
+
+    this.setState(state => ({
+      showModal: !state.showModal
+    }))
+  } 
+
   
-
-  componentDidUpdate(prevProps,prevState) {
-    console.log('App did update');
-
-    if (this.state.todos !== prevState.todos) {
-      console.log('Todos field is update ');
-      localStorage.setItem('todos', JSON.stringify(this.state.todos));
-    }
-  }
-
-  componentDidMount() {
-    const todos = localStorage.getItem('todos');
-    
-    if (todos !== null) {
-      this.setState({ todos: JSON.parse(todos) });
-    } else {
-      this.setState({ todos: this.state.todos });
-    }
-    // const parsedTodos = JSON.parse(todos);
-
-    // this.setState({todos: parsedTodos})
-  }
 
     render() {
         const completedTodos = this.state.todos.filter(todo => todo.completed);
       
       const visibleTodos = this.getVisibleTodos();
       return (
-            <div className={css.Todo}>
+        <div className={css.Todo}>
+          <button type="button" onClick={this.toggleModal}>Open modal</button>
+          {this.state.showModal && (
+            <Modal onClose={this.toggleModal}>
+            <h1>Modal window</h1>
+            <p>Lorem ipsum dolor sit amet.</p>
+            <button type="button" onClick={this.toggleModal}>Close</button>
+          </Modal>)}
+            
             <h2>To do list</h2>
             <span>Total quantity: {this.state.todos.length}</span>
             <span className={css.Todo__quantity}>Quantity of done: {completedTodos.length }</span>
