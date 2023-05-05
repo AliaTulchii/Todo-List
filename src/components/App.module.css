@@ -1,0 +1,25 @@
+.App{
+    width:1200px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.App__box{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    
+}
+
+/* .Todo{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(8, 209, 223);
+    background-color: rgba(8, 209, 223, 0.37);
+} */
+
+.input{
+    height: 30px;
+}
